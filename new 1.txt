@@ -1,0 +1,121 @@
+    1  ls
+    2  curl
+    3  apt get curl
+    4  apt install curl
+    5  sudo
+    6  sudo apt get curl
+    7  sudo apt install curl
+    8  curl
+    9  curl -L https://raw.githubusercontent.com/noir-lang/noirup/refs/heads/main/install | bash
+   10  noirup
+   11  source /home/dbank/.bashrc
+   12  noirup
+   13  ls
+   14  cd .
+   15  cd ..
+   16  cd Projects/Academic/Research
+   17  mkdir HelloWorld
+   18  cd HelloWorld/
+   19  nargo new hello_world
+   20  ls
+   21  cd hello_world/
+   22  nargo check
+   23  ls
+   24  nano
+   25  nano Prover.toml
+   26  nargo execute
+   27  curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/refs/heads/next/barretenberg/bbup/install | bash
+   28  bbup
+   29  source ~/.bashrc
+   30  bbup
+   31  cd ..
+   32  nargo --version
+   33  nargo --help
+   34  bbup --version
+   35  bbup
+   36  bbup -v 0.87.0
+   37  bb --version
+   38  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   39  echo >> /home/dbank/.bashrc
+   40  echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"' >> /home/dbank/.bashrc
+   41  eval "$(/home/linuxbew/.linuxbew/bin/brew shellenv bash)"
+   42  eval "$(/home/linuxbrew/.linuxbew/bin/brew shellenv bash)"
+   43  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
+   44  sudo apt-get install build-essential
+   45  brew
+   46  brew install jq.
+   47  brew install jq
+   48  nargo new simple_circuit
+   49  cd simple_circuit/
+   50  ls
+   51  nargo check
+   52  nargo execute
+   53  bb prove -b ./target/simple_circuit.json -w ./target/simple_circuit.gz -o ./target
+   54  noirup
+   55  bbup
+   56  bbup -v 0.87.0
+   57  bb -v
+   58  nargo compile
+   59  nargo execute
+   60  bb prove -b ./target/simple_circuit.json -w ./target/simple_circuit.gz -o ./target
+   61  bbup -v 0.89.0
+   62  bbup -v 0.88.0
+   63  bbup -v nightly
+   64  noirup -v 1.0.0-beta.9
+   65  noir -v
+   66  nargo --version
+   67  bb --version
+   68  nargo compile
+   69  nargo execute
+   70  bb prove -b ./target/simple_circuit.json -w ./target/simple_circuit.gz -o ./target
+   71  bb write_vk -b ./target/simple_circuit.json -o ./target
+   72  bb verify -k ./target/vk -p ./target/proof
+   73  history
+   74  cd ..
+   75  cd ZKPEngine/simple_circuit/
+   76  cls
+   77  clear
+   78  cd ..
+   79  nargo new zk_signa_verify
+   80  ls
+   81  cd zk_signa_verify/
+   82  nargo check
+   83  cast keccak "hello"
+   84  curl -L https://getfoundry.sh/install | bash && foundryup
+   85  export PATH="$PATH:/home/dbank/.foundry/bin"
+   86  foundryup
+   87  cast keccak "hello"
+   88  cast wallet address
+   89  cast wallet address --mnemonic "this is the simplest password mnemonic phrases every written in the history"
+   90  cast wallet address --mnemonic "this has been simplest password mnemonic phrases every written in the history"
+   91  cast wallet address --mnemonic "this will be simplest password mnemonic phrases every written in the history"
+   92  cast wallet address --mnemonic "this will always simplest password mnemonic phrases every written in the history"
+   93  cast wallet address --mnemonic "this will always simplistic password mnemonic phrases every written in the history"
+   94  cast wallet address --mnemonic "this will always simple password mnemonic phrases every written in the history"
+   95  cast wallet address --mnemonic "this will always simple passwrd mnemonic phrases every written in the history"
+   96  cast wallet address --mnemonic "this will always simple p@swrd mnemonic phrases every written in the history"
+   97  cast wallet address --mnemonic "test test test test test test test test test test test junk"
+   98  cast wallet public-key --mnemonic "test test test test test test test test test test test hooray"
+   99  cast wallet public-key --mnemonic "test test test test test test test test test test test state"
+  100  cast wallet public-key --mnemonic "test test test test test test test test test test test junky"
+  101  cast wallet public-key --mnemonic "test test test test test test test test test test test junk"
+  102  cast wallet sign --no-hash 0x1c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac8
+  103  cast wallet sign --no-hash --mnemonic 0x1c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac8
+  104  cast wallet sign --mnemonic 0x1c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac8
+  105  cast wallet sign "hello" --private-key 0x1c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac8
+  106  chmod +x generate_inputs.sh
+  107  ./generate_inputs.sh
+  108  generate_inputs.sh
+  109  ./generate_inputs.sh
+  110  generate_inputs.sh
+  111  ls
+  112  ./generate_inputs.sh
+  113  sudo apt install dos2unix
+  114  sed
+  115  sed -i 's/\r$//' generate_inputs.sh
+  116  tr
+  117  tr -d '\r' < generate_inputs.sh > temp.sh && mv temp.sh generate_inputs.sh
+  118  chmod +x generate_inputs.sh
+  119  ./generate_inputs.sh
+  120  nargo execute
+  121  history
