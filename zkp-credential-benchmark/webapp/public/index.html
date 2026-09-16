@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ZK Credential Demo &mdash; Noir + Ethereum</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-dark mb-4">
+    <div class="container">
+      <span class="navbar-brand mb-0 h1">ZK Credential Demo</span>
+      <span class="text-light small">NoirJS + bb.js (client-side proving) &rarr; ethers.js (on-chain verification)</span>
+    </div>
+  </nav>
+
+  <div class="container pb-5">
+    <div class="alert alert-info">
+      This page generates the <strong>same four credential circuits</strong> benchmarked in
+      Chapter 3/4 of the thesis, entirely in your browser (no server ever sees your private
+      attributes), then submits the proof to a deployed verifier contract on either a local
+      Anvil node or Sepolia. See <code>webapp/README.md</code> for setup steps.
+    </div>
+
+    <ul id="scenario-tabs" class="nav nav-pills mb-3"></ul>
+
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-header">1. Build the credential (Holder)</div>
+          <div class="card-body">
+            <p id="scenario-description" class="text-muted"></p>
+            <form id="credential-form" onsubmit="return false;">
+              <div id="credential-fields"></div>
+              <div id="derived-box" class="d-none"></div>
+              <button id="generate-proof-btn" type="button" class="btn btn-primary w-100">
+                Generate Proof (client-side)
+              </button>
+            </form>
+            <div id="proof-status" class="mt-3 small text-muted"></div>
+
+            <div id="proof-result" class="mt-3 d-none">
+              <hr />
+              <dl class="row small mb-0">
+                <dt class="col-6">Witness generation time</dt>
+                <dd class="col-6"><span id="proof-witness-time"></span> ms</dd>
+                <dt class="col-6">Proving time</dt>
+                <dd class="col-6"><span id="proof-proving-time"></span> ms</dd>
+                <dt class="col-6">Proof size</dt>
+                <dd class="col-6"><span id="proof-size"></span> bytes</dd>
+              </dl>
+              <div class="small mt-2">
+                <div class="fw-semibold">Public inputs</div>
+                <pre id="proof-public-inputs" class="bg-light p-2 small text-break" style="white-space: pre-wrap"></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-header">2. Verify on-chain (Verifier)</div>
+          <div class="card-body">
+            <button id="connect-wallet-btn" type="button" class="btn btn-outline-dark w-100 mb-2">
+              Connect Wallet
+            </button>
+            <div id="wallet-status" class="small text-muted mb-3">Not connected.</div>
+
+            <div class="mb-3">
+              <label class="form-label">CredentialVerifierDemo contract address</label>
+              <input id="contract-address-input" type="text" class="form-control font-monospace" placeholder="0x..." />
+              <div class="form-text">
+                Pre-filled per network from <code>src/network-config.js</code>; edit and it's
+                remembered for next time.
+              </div>
+            </div>
+
+            <button id="submit-proof-btn" type="button" class="btn btn-success w-100" disabled>
+              Submit Proof to Blockchain
+            </button>
+
+            <div id="tx-status" class="mt-3 small text-muted"></div>
+            <div id="tx-result" class="mt-3 d-none">
+              <hr />
+              <dl class="row small mb-0">
+                <dt class="col-5">Transaction hash</dt>
+                <dd class="col-7 font-monospace text-break"><span id="tx-hash"></span></dd>
+                <dt class="col-5">Verified</dt>
+                <dd class="col-7"><span id="tx-verified"></span></dd>
+                <dt class="col-5">Total tx gas used</dt>
+                <dd class="col-7"><span id="tx-gas-total"></span></dd>
+                <dt class="col-5">Verification-only gas</dt>
+                <dd class="col-7"><span id="tx-gas-verification"></span></dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-4">
+          <div class="card-header">How this differs from Chapter 4's numbers</div>
+          <div class="card-body small text-muted">
+            This demo's on-chain contract (<code>CredentialVerifierDemo</code>) is a
+            state-changing wrapper so your wallet can sign a real transaction. Chapter 4's gas
+            figures come from <code>CredentialVerifier</code> (a <code>view</code> function
+            measured via isolated <code>gasleft()</code> inside <code>forge test</code>) &mdash;
+            use <code>results/benchmark_results.csv</code> for the thesis's actual numbers, not
+            this page.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="bundle.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+
+# Needed so RealVerifierGas.t.sol can read its JSON fixtures via vm.readFile.
+fs_permissions = [{ access = "read", path = "./test/fixtures" }]
+
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+solc_version = "0.8.27"

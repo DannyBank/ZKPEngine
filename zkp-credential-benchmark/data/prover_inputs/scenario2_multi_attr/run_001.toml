@@ -1,0 +1,8 @@
+age = "52"
+income = "16746"
+country_code = "1"
+membership_tier = "2"
+minimum_age = "18"
+minimum_income = "3000"
+allowed_countries = ["1", "44", "233"]
+allowed_membership_tiers = ["1", "2", "3"]

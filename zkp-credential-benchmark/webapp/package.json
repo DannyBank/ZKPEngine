@@ -1,0 +1,19 @@
+{
+  "name": "zkp-credential-webapp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Browser demo: generate the same Chapter 3 credential proofs client-side (NoirJS + bb.js) and verify them on-chain (ethers.js) against the deployed verifier contracts, on a local Anvil node or Sepolia.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "serve": "node serve.mjs"
+  },
+  "dependencies": {
+    "@noir-lang/noir_js": "1.0.0-beta.22",
+    "@aztec/bb.js": "5.0.0-nightly.20260522",
+    "ethers": "6.17.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}

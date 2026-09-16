@@ -1,0 +1,6 @@
+[package]
+name = "scenario2_multi_attr"
+type = "bin"
+authors = [""]
+
+[dependencies]
