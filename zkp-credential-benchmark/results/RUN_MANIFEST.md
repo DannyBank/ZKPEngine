@@ -40,6 +40,66 @@ before Chapter 4 is finalized, for reproducibility accuracy.
 9. `analyze_results.py` -> `results/descriptive_stats.csv`, `results/correlations.csv`,
    `results/figures/figure_3_1.png` .. `figure_3_8.png`.
 
+## Correction (2026-09-16): proof size / calldata size measurement defect
+
+A thesis review caught a genuine data-integrity defect: `proof_size` (14,656 bytes, flat
+across all scenarios) and `calldata_size` (7,264-8,096 bytes) in the original
+`benchmark_results.csv`/`gas_results.csv` cannot both be correct for the same artifact,
+since 7,264 bytes cannot carry a 14,656-byte proof.
+
+Root cause: these are **two different proofs**, not one measured two ways.
+- `proof_size` is the **off-chain** proof (`bb prove`'s default, Poseidon2 target), used only
+  for the RQ1/RQ2 proving-time/local-verification measurements. It is never submitted to
+  Ethereum. 14,656 bytes, constant across scenarios, is correct **for that artifact**.
+- The proof actually submitted on-chain is a **separate** artifact (`-t evm`, Keccak target,
+  built by `generate_evm_artifacts.py`). Its real size is 7,232 bytes (Scenarios 1-2), 7,616
+  bytes (Scenario 3), 8,000 bytes (Scenario 4) — confirmed directly from the real fixture
+  files in `contracts/test/fixtures/`.
+- Separately, the original `calldata_size` (computed in `RealVerifierGas.t.sol` as
+  `proof.length + publicInputs.length * 32`) omitted the 4-byte function selector and 128
+  bytes of ABI head/length words that `verifyCredential(bytes,bytes32[])` calldata actually
+  requires — understating true calldata by exactly 132 bytes in every scenario.
+
+Fix applied, in order: `scripts/fix_calldata_measurement.py` (new) recomputes the true
+ABI-encoded calldata length directly from the real fixtures — independently re-derived via
+a from-scratch Python ABI encoder, cross-checked against an earlier ethers.js computation,
+both agreeing exactly — and adds a new `onchain_proof_size` column so the on-chain and
+off-chain proofs are never conflated again; `scripts/merge_gas_results.py` and
+`scripts/analyze_results.py` were updated to carry `onchain_proof_size` through and to plot
+Figure 3.7 as on-chain proof size vs. calldata size (previously, incorrectly, off-chain
+proof size vs. calldata size). `results/benchmark_results.csv`, `results/gas_results.csv`,
+`results/descriptive_stats.csv`, `results/correlations.csv` and `results/figures/figure_3_7.png`
+were all regenerated from the real fixtures/proofs; nothing was hand-edited. The pre-correction
+files are kept in `_pre_correction_backup/` rather than deleted.
+
+Consistency check (as specified by the reviewer): `calldata >= 4 + proof_bytes +
+sum(public_input_bytes)`. This now holds with equality plus the fixed 132-byte ABI-head
+overhead, for all 6 gas-benchmarked trials (see `fix_calldata_measurement.py`'s console
+output for the row-by-row check).
+
+**This correction does not change the thesis's central conclusion.** Off-chain vs. on-chain
+scaling (Section 3.11.4 / Chapter 4 RQ4) is recomputed from `proving_time` and
+`ethereum_gas`, neither of which was affected by this bug; the decoupling verdict is
+unchanged (proving time +196.7%, Ethereum gas +5.6%, Scenario 1 to Scenario 4).
+
+## Gas-isolation scope (also raised in review)
+
+`ethereum_gas` (e.g. 2,709,693 for Scenario 1) is measured inside `RealVerifierGas.t.sol` as
+`gasBefore = gasleft(); credentialVerifier.verifyCredential(proof, publicInputs); gasUsed =
+gasBefore - gasleft();` — an in-process gas delta around a Solidity external call inside a
+Foundry test, not the gas consumed by a real, top-level, mined Ethereum transaction. It
+**excludes**: (a) the 21,000 gas base intrinsic transaction fee, and (b) the intrinsic
+per-byte calldata gas charge (4 gas/zero byte, 16 gas/non-zero byte) that a real transaction
+pays for its top-level `data` field — because the fixture bytes here are loaded from JSON
+into memory and passed as ordinary Solidity call arguments, never placed in an actual
+transaction's `data` field. Computed (not independently re-measured on a live chain) from
+the real, corrected calldata bytes and the known EVM fee schedule, that additional intrinsic
+overhead is approximately 130,168 gas (Scenario 1) / 131,172 (Scenario 2) / 137,188
+(Scenario 3) / 143,168 (Scenario 4) — i.e. a real end-user transaction would cost roughly
+this much more than the isolated `ethereum_gas` figure alone suggests. This is stated here
+as a computed estimate, not validated against a live mined transaction end to end; doing so
+is noted as outstanding follow-up work rather than papered over.
+
 ## Files in this directory
 
 - `benchmark_results.csv` — the full 120-row dataset (Section 3.9.2 schema), gas columns

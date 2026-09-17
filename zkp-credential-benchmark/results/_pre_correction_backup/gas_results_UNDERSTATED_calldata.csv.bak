@@ -1,0 +1,7 @@
+scenario_id,run_id,ethereum_gas,calldata_size
+scenario1_minimal,1,2709693,7264
+scenario1_minimal,2,2712250,7264
+scenario1_minimal,3,2714808,7264
+scenario2_multi_attr,1,2724435,7488
+scenario3_full_integrity,1,2790483,7744
+scenario4_advanced_identity,1,2862899,8096

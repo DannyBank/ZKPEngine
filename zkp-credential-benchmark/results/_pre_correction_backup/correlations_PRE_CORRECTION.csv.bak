@@ -1,0 +1,6 @@
+pair,method,n,correlation,p_value
+attribute_count vs proving_time,Spearman,120,0.8999,0.0
+attribute_count vs peak_memory,Spearman,120,0.9824,0.0
+circuit_size vs proving_time,Spearman,120,0.8999,0.0
+circuit_size vs proof_size,Spearman,120,,
+circuit_size vs local_verify_time,Spearman,120,0.2759,0.002292

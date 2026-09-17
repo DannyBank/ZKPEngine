@@ -35,18 +35,29 @@ def main():
     benchmark_df["run_id"] = benchmark_df["run_id"].astype(int)
     gas_df["run_id"] = gas_df["run_id"].astype(int)
 
+    gas_cols = ["ethereum_gas", "calldata_size"]
+    if "onchain_proof_size" in gas_df.columns:
+        # Corrected schema (see fix_calldata_measurement.py): calldata_size is
+        # the true ABI-encoded transaction calldata, and onchain_proof_size is
+        # the actual EVM-target proof size -- a genuinely different artifact
+        # from the off-chain `proof_size` column already in benchmark_df.
+        gas_cols.append("onchain_proof_size")
+
     merged = benchmark_df.merge(
-        gas_df[["scenario_id", "run_id", "ethereum_gas", "calldata_size"]],
+        gas_df[["scenario_id", "run_id"] + gas_cols],
         on=["scenario_id", "run_id"],
         how="left",
         suffixes=("", "_new"),
     )
 
     # Prefer the freshly merged gas figures if both existed for some reason.
-    for col in ["ethereum_gas", "calldata_size"]:
+    for col in gas_cols:
         new_col = f"{col}_new"
         if new_col in merged.columns:
-            merged[col] = merged[new_col].combine_first(merged[col])
+            if col in merged.columns:
+                merged[col] = merged[new_col].combine_first(merged[col])
+            else:
+                merged[col] = merged[new_col]
             merged.drop(columns=[new_col], inplace=True)
 
     merged.to_csv(args.out, index=False)

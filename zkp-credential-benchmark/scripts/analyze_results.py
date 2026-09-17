@@ -40,7 +40,7 @@ def load_data(csv_path: Path) -> pd.DataFrame:
     numeric_cols = [
         "attribute_count", "circuit_size", "compile_time", "witness_time",
         "proving_time", "peak_memory", "proof_size", "local_verify_time",
-        "calldata_size", "ethereum_gas",
+        "calldata_size", "ethereum_gas", "onchain_proof_size",
     ]
     for col in numeric_cols:
         if col in df.columns:
@@ -52,7 +52,8 @@ def descriptive_stats(df: pd.DataFrame) -> pd.DataFrame:
     """Section 3.11.1: mean, median, min, max, std, coefficient of variation
     per scenario, for every core metric."""
     metrics = ["compile_time", "witness_time", "proving_time", "peak_memory",
-               "proof_size", "local_verify_time", "ethereum_gas", "calldata_size"]
+               "proof_size", "local_verify_time", "ethereum_gas", "calldata_size",
+               "onchain_proof_size"]
     rows = []
     for scenario, group in df.groupby("scenario_id"):
         for metric in metrics:
@@ -181,10 +182,17 @@ def make_figures(df: pd.DataFrame, out_dir: Path):
     scatter("attribute_count", "proving_time", "Figure 3.1: Attribute Count vs. Proof-Generation Time", "figure_3_1.png")
     scatter("attribute_count", "peak_memory", "Figure 3.2: Attribute Count vs. Peak Memory Usage", "figure_3_2.png")
     scatter("circuit_size", "proving_time", "Figure 3.3: Circuit Size vs. Proof-Generation Time", "figure_3_3.png")
-    scatter("circuit_size", "proof_size", "Figure 3.4: Circuit Size vs. Proof Size", "figure_3_4.png")
+    # NOTE: proof_size is the OFF-CHAIN (default/Poseidon2-target) proof
+    # from run_benchmark.py -- used here correctly, against the off-chain
+    # circuit_size. It is a different artifact from the ON-CHAIN
+    # (EVM/Keccak-target) proof that determines calldata (see
+    # scripts/fix_calldata_measurement.py); do not compare proof_size
+    # against calldata_size directly, they were built with different `bb`
+    # targets and are not the same bytes.
+    scatter("circuit_size", "proof_size", "Figure 3.4: Circuit Size vs. Off-Chain Proof Size", "figure_3_4.png")
     scatter("circuit_size", "local_verify_time", "Figure 3.5: Circuit Size vs. Local Verification Time", "figure_3_5.png")
     scatter("circuit_size", "ethereum_gas", "Figure 3.6: Circuit Size vs. Ethereum Verification Gas", "figure_3_6.png")
-    scatter("proof_size", "calldata_size", "Figure 3.7: Proof Size vs. Transaction Calldata Size", "figure_3_7.png")
+    scatter("onchain_proof_size", "calldata_size", "Figure 3.7: On-Chain Proof Size vs. Transaction Calldata Size", "figure_3_7.png")
 
     # Figure 3.8: off-chain vs on-chain scaling trend, normalized to the
     # simplest scenario so both series can share one axis.
